@@ -1,0 +1,163 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Creating ECS Service.
+Parameters:   
+  DBfromSSM:
+    Description: The ssm value for the env variable required for db container
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: MYSQL_ROOT_PASSWORD
+    ConstraintDescription: Password must be greater than 8 latters
+  ClusterName:
+    Description: Please enter name for the ECS cluster.
+    Type: String
+  TargetGroupName:
+    Description: Please eneter Target Group name.
+    Type: String
+    Default: TG
+  WebECRImage:
+    Description: Please decribe which ECR image to use for web application.
+    Type: String
+    Default: 020046395185.dkr.ecr.us-east-2.amazonaws.com/newphpimage:latest
+  MysqlECRImage:
+    Description: Please describe which ECR image to use for mysql.
+    Type: String
+    Default: 020046395185.dkr.ecr.us-east-2.amazonaws.com/mysql:5.6
+  ALBName:
+    Description: Please enter ALB name.
+    Type: String
+    Default: ALB
+  HealthPath:
+    Description: Specify a path for the load balancer to check the health.
+    Type: String
+    Default: /
+
+Resources:
+  TaskDefinition: 
+    Type: AWS::ECS::TaskDefinition
+    Properties: 
+      Family: 'app-db-cfn'
+      NetworkMode: 'host'
+      ContainerDefinitions:
+        - Name:  'sample-web-app'
+          Image: !Ref WebECRImage 
+          Essential: false
+          PortMappings:
+            - ContainerPort: 80
+              Protocol: 'tcp'
+          Memory: 300 #Hard Limit
+          MemoryReservation: 200 #Soft Limit
+        - Name:  'sample-mysql-app'
+          Image: !Ref MysqlECRImage 
+          Essential: true
+          PortMappings:
+            - ContainerPort: 3306
+              Protocol: 'tcp'
+          Memory: 300 #Hard Limit
+          MemoryReservation: 200 #Soft Limit
+          Environment:
+            - Name: MYSQL_ROOT_PASSWORD
+              Value: !Ref DBfromSSM
+  LoadBalancerSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Access to the public facing load balancer
+      VpcId: vpc-96a95ffd
+      SecurityGroupIngress:
+          - CidrIp: 0.0.0.0/0
+            IpProtocol: -1
+  ALB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: !Ref ALBName
+      Type: application
+      Subnets:
+        - subnet-209eca5a
+        - subnet-f81a0490
+        - subnet-00209c4c
+      Scheme: internet-facing
+      SecurityGroups:
+        - Ref: LoadBalancerSG
+      Tags:
+       - Key: Name
+         Value: !Ref ALBName
+  TargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckEnabled: true
+      HealthCheckIntervalSeconds: '6'
+      HealthCheckPath: !Ref HealthPath
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: '4'
+      HealthyThresholdCount: '2'
+      Port: '80'
+      Protocol: HTTP
+      Name: !Ref TargetGroupName
+      UnhealthyThresholdCount: '3'
+      VpcId: vpc-96a95ffd
+  HTTPListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref ALB
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref TargetGroup
+  ListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+        - TargetGroupArn: !Ref TargetGroup
+          Type: 'forward'
+      Conditions:
+        - Field: path-pattern
+          Values: ["*"]
+      ListenerArn: !Ref HTTPListener
+      Priority: 1
+  ecsService:
+      Type: AWS::ECS::Service
+      DependsOn: ListenerRule
+      Properties:
+        ServiceName: 'sample-service'
+        Cluster: !Ref ClusterName
+        SchedulingStrategy: 'REPLICA'
+        DeploymentConfiguration:
+            MaximumPercent: 200
+            MinimumHealthyPercent: 100
+        DesiredCount: 1
+        TaskDefinition: !Ref TaskDefinition
+        HealthCheckGracePeriodSeconds: 10
+        LaunchType: 'EC2'
+        LoadBalancers:
+            - ContainerName: 'sample-web-app'
+              ContainerPort: 80
+              TargetGroupArn: !Ref TargetGroup
+  ECSServiceRole: 
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: [ecs.amazonaws.com]
+          Action: ['sts:AssumeRole']
+      Path: /
+      Policies:
+      - PolicyName: ecs-service
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action:
+              - 'ec2:AttachNetworkInterface'
+              - 'ec2:CreateNetworkInterface'
+              - 'ec2:CreateNetworkInterfacePermission'
+              - 'ec2:DeleteNetworkInterface'
+              - 'ec2:DeleteNetworkInterfacePermission'
+              - 'ec2:Describe*'
+              - 'ec2:DetachNetworkInterface'
+              - 'elasticloadbalancing:DeregisterInstancesFromLoadBalancer'
+              - 'elasticloadbalancing:DeregisterTargets'
+              - 'elasticloadbalancing:Describe*'
+              - 'elasticloadbalancing:RegisterInstancesWithLoadBalancer'
+              - 'elasticloadbalancing:RegisterTargets'
+            Resource: '*'
+        
