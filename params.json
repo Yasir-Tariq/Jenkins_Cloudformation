@@ -1,0 +1,22 @@
+[
+  {
+    "ParameterKey": "ecsAMI",
+    "ParameterValue": "ami-035ad8e6117e5fde5"
+  },
+  {
+    "ParameterKey": "KeyName",
+    "ParameterValue": "yasirKP-ohio"
+  }
+  {
+    "ParameterKey": "KeyName",
+    "ParameterValue": "yasirKP-ohio"
+  },
+  {
+    "ParameterKey": "ClusterName",
+    "ParameterValue": "myCluster"
+  },
+  {
+    "ParameterKey": "InstanceType",
+    "ParameterValue": "t2.small"
+  }
+]
