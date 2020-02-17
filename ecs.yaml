@@ -59,6 +59,8 @@ Resources:
   #         FromPort: '3306'
   #         ToPort: '3306'
   #         CidrIp: 0.0.0.0/0
+
+  
   AutoscalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
