@@ -26,6 +26,12 @@ pipeline {
         stage ('CFN') {
             steps {
                 script {
+                  withAWS(region:'us-east-2') {
+                          def ecs_stack = cfnUpdate(stack: "ecs-stack", paramsFile:'params_ecs.json', file:'ecs.yaml')
+                          def service_stack = cfnUpdate(stack: "service-stack", paramsFile:'params_service.json', file:'service.yaml')
+
+         
+                        }
                     // if (jenkinsStackUpdateStatus) {
                         // stage ('Create Stacks') {
                             // sh "aws cloudformation create-stack --stack-name ecs-stack --template-body file://ecs.yaml --parameters file://params_ecs.json --capabilities CAPABILITY_IAM --region 'us-east-2'"
@@ -34,16 +40,16 @@ pipeline {
                     // }
                     // if (jenkinsStackUpdateStatus = true) {
                     // else {    
-                        stage ('Modify Stacks') {
-                          withAWS(region:'us-east-2') {
-                          def output1 = cfnUpdate(stack: "ecs1-stack", paramsFile:'params_ecs.json', file:'ecs.yaml')
-                          def output2 = cfnUpdate(stack: "service-stack", paramsFile:'params_service.json', file:'service.yaml')
+                        // stage ('Modify Stacks') {
+                        //   withAWS(region:'us-east-2') {
+                        //   def output1 = cfnUpdate(stack: "ecs-stack", paramsFile:'params_ecs.json', file:'ecs.yaml')
+                        //   def output2 = cfnUpdate(stack: "service-stack", paramsFile:'params_service.json', file:'service.yaml')
 
          
-                        }
+                        // }
                             // sh "aws cloudformation update-stack --stack-name ecs-stack --template-body file://ecs.yaml --parameters file://params_ecs.json --capabilities CAPABILITY_IAM --region 'us-east-2'"
                             // sh "aws cloudformation update-stack --stack-name service-stack --template-body file://service.yaml --parameters file://params_service.json --capabilities CAPABILITY_IAM --region 'us-east-2'"
-                        }
+                        // }
                     // }
                 }
             }
