@@ -20,6 +20,7 @@
 
 
 pipeline {
+  agent any
      stages {
         stage ('CFN') {
             steps {
