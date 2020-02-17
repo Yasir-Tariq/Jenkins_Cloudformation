@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                   withAWS(region:'us-east-2') {
-                          def ecs_stack = cfnUpdate(stack: "${paramsstackecs}", params:['ecsAMI':"${params.ecsAMI}",'KeyName':"${params.KeyName}",'ClusterName':"${params.ClusterName}",'InstanceType':"${params.InstanceType}"], url:'https://for-nested-stacks.s3.us-east-2.amazonaws.com/ecs.yaml')
+                          def ecs_stack = cfnUpdate(stack: "${params.stackecs}", params:['ecsAMI':"${params.ecsAMI}",'KeyName':"${params.KeyName}",'ClusterName':"${params.ClusterName}",'InstanceType':"${params.InstanceType}"], url:'https://for-nested-stacks.s3.us-east-2.amazonaws.com/ecs.yaml')
                           def service_stack = cfnUpdate(stack: "${params.stackservice}", params:['DBfromSSM':"${params.DBfromSSM}",'ClusterName':"${params.ClusterName}",'TargetGroupName':"${params.TargetGroupName}",'WebECRImage':"${params.WebECRImage}",'MysqlECRImage':"${params.MysqlECRImage}",'ALBName':"${params.ALBName}",'HealthPath':"${params.HealthPath}"] , url:'https://for-nested-stacks.s3.us-east-2.amazonaws.com/service.yaml')
                         }
                 }
