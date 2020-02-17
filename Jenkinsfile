@@ -1,8 +1,8 @@
 pipeline {
   agent any
   parameters {
-        string(name: 'ecs', description: 'enter the stack name for ecs cluster')
-        string(name: 'service', description: 'enter the stack name for ecs service')
+        string(name: 'ecs', defaultValue: 'ecs-stack', description: 'enter the stack name for ecs cluster')
+        string(name: 'service', defaultValue: 'service-stack', description: 'enter the stack name for ecs service')
            }
      stages {
         stage ('CFN') {
