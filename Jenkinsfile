@@ -16,8 +16,6 @@
 // // sh "aws cloudformation update-stack --stack-name ecs-stack --template-body file://ecs.yaml --parameters file://params_ecs.json --capabilities CAPABILITY_IAM --region 'us-east-2'"
 // // sh "aws cloudformation update-stack --stack-name service-stack --template-body file://service.yaml --parameters file://params_service.json --capabilities CAPABILITY_IAM --region 'us-east-2'"
 
-
-
 def jenkinsStackUpdateStatus = false
 pipeline {
   agent any
