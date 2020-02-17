@@ -20,7 +20,7 @@ pipeline {
                 script {
                   withAWS(region:'us-east-2') {
                           def ecs_stack = cfnUpdate(stack: "${params.ecs}", params:['ecsAMI':"${params.ecsAMI}",'KeyName':"${params.KeyName}",'ClusterName':"${params.ClusterName}",'InstanceType':"${params.InstanceType}"], url:'https://for-nested-stacks.s3.us-east-2.amazonaws.com/ecs.yaml')
-                          def service_stack = cfnUpdate(stack: "${params.service}", params:['DBfromSSM':"${params.DBfromSSM}",'ClusterName':"${params.ClusterName}",'TargetGroupName':"${params.TargetGroupName}",'WebECRImage':"${params.WebECRImage}",'MysqlECRImage':"${params.MysqlECRImage}",'ALBName',"${params.ALBName}",'HealthPath':"${params.HealthPath}"] , url:'https://for-nested-stacks.s3.us-east-2.amazonaws.com/service.yaml')
+                          def service_stack = cfnUpdate(stack: "${params.service}", params:['DBfromSSM':"${params.DBfromSSM}",'ClusterName':"${params.ClusterName}",'TargetGroupName':"${params.TargetGroupName}",'WebECRImage':"${params.WebECRImage}",'MysqlECRImage':"${params.MysqlECRImage}",'ALBName':"${params.ALBName}",'HealthPath':"${params.HealthPath}"] , url:'https://for-nested-stacks.s3.us-east-2.amazonaws.com/service.yaml')
                         }
                 }
             }
