@@ -1,7 +1,7 @@
 pipeline {
   agent any
   parameters {
-        string(name: 'stackecs', defaultValue: 'ecs-stack', description: 'Enter the stack name for ecs cluster')
+        string(name: 'stackecs', defaultValue: 'ecs-stack2', description: 'Enter the stack name for ecs cluster')
         string(name: 'stackservice', defaultValue: 'service-stack', description: 'Enter the stack name for ecs service')
         string(name: 'ecsAMI', defaultValue: 'ami-035ad8e6117e5fde5', description: 'Enter AMI for ECS.')
         string(name: 'KeyName', defaultValue: 'yasirKP-ohio', description: 'Enter key pair name.')
@@ -11,7 +11,7 @@ pipeline {
         string(name: 'TargetGroupName', defaultValue: 'mytg', description: 'Enter Target group name.')
         string(name: 'WebECRImage', defaultValue: '020046395185.dkr.ecr.us-east-2.amazonaws.com/newphpimage:latest', description: 'Enter ECR Repo for web app.')
         string(name: 'MysqlECRImage', defaultValue: '020046395185.dkr.ecr.us-east-2.amazonaws.com/mysql:5.6', description: 'Enter ECR repo for mysql.')
-        string(name: 'ALBName', defaultValue: 'myalb2', description: 'Enter name for the Application Load Balancer.')
+        string(name: 'ALBName', defaultValue: 'myalb', description: 'Enter name for the Application Load Balancer.')
         string(name: 'HealthPath', defaultValue: '/', description: 'Enter path for health checks.')
            }
      stages {
