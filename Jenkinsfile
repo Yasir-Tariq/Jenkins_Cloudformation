@@ -1,16 +1,26 @@
 pipeline {
   agent any
   parameters {
-        string(name: 'ecs', defaultValue: 'ecs-stack', description: 'enter the stack name for ecs cluster')
-        string(name: 'service', defaultValue: 'service-stack', description: 'enter the stack name for ecs service')
+        string(name: 'ecs', defaultValue: 'ecs-stack', description: 'Enter the stack name for ecs cluster')
+        string(name: 'service', defaultValue: 'service-stack', description: 'Enter the stack name for ecs service')
+        string(name: 'ecsAMI', defaultValue: 'ami-035ad8e6117e5fde5', description: 'Enter AMI for ECS.')
+        string(name: 'KeyName', defaultValue: 'yasirKP-ohio', description: 'Enter key pair name.')
+        string(name: 'ClusterName', defaultValue: 'my_cluster', description: 'Enter AMI for ECS.')
+        string(name: 'InstanceType', defaultValue: 't2.small', description: 'Enter type for ECS Instance.')
+        string(name: 'DBfromSSM', defaultValue: 'MYSQL_ROOT_PASSWORD', description: 'DB password value from AWS Systems manager.')
+        string(name: 'TargetGroupName', defaultValue: 'my_tg', description: 'Enter Target group name.')
+        string(name: 'WebECRImage', defaultValue: '020046395185.dkr.ecr.us-east-2.amazonaws.com/newphpimage:latest', description: 'Enter ECR Repo for web app.')
+        string(name: 'MysqlECRImage', defaultValue: '020046395185.dkr.ecr.us-east-2.amazonaws.com/mysql:5.6', description: 'Enter ECR repo for mysql.')
+        string(name: 'ALBName', defaultValue: 'my_alb', description: 'Enter name for the Application Load Balancer.')
+        string(name: 'HealthPath', defaultValue: '/', description: 'Enter path for health checks.')
            }
      stages {
         stage ('CFN') {
             steps {
                 script {
                   withAWS(region:'us-east-2') {
-                          def ecs_stack = cfnUpdate(stack: "${params.ecs}", paramsFile:'params_ecs.json', file:'ecs.yaml')
-                          def service_stack = cfnUpdate(stack: "${params.service}", paramsFile:'params_service.json', file:'service.yaml')
+                          def ecs_stack = cfnUpdate(stack: "${params.ecs}", params:['ecsAMI':"${params.ecsAMI}",'KeyName':"${params.KeyName}",'ClusterName':"${params.ClusterName}",'InstanceType':"${params.InstanceType}"], url:'https://for-nested-stacks.s3.us-east-2.amazonaws.com/ecs.yaml')
+                          def service_stack = cfnUpdate(stack: "${params.service}", params:['DBfromSSM':"${params.DBfromSSM}",'ClusterName':"${params.ClusterName}",'TargetGroupName':"${params.TargetGroupName}",'WebECRImage':"${params.WebECRImage}",'MysqlECRImage':"${params.MysqlECRImage}",'ALBName',"${params.ALBName}",'HealthPath':"${params.HealthPath}"] , url:'https://for-nested-stacks.s3.us-east-2.amazonaws.com/service.yaml')
                         }
                 }
             }
