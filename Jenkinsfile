@@ -33,8 +33,8 @@ pipeline {
                     if (jenkinsStackUpdateStatus) {
                         stage ('Modify Stacks') {
                           withAWS(region:'us-west-2') {
-                          def outputs = cfnUpdate(stack: "ecs-stack", file:ecs.yaml)
-                          def outputs = cfnUpdate(stack: "service-stack", file:service.yaml)
+                          def output1 = cfnUpdate(stack: "ecs-stack", file:'ecs.yaml')
+                          def output2 = cfnUpdate(stack: "service-stack", file:'service.yaml')
 
          
                         }
