@@ -6,7 +6,7 @@ pipeline {
         string(name: 'ecsAMI', defaultValue: 'ami-035ad8e6117e5fde5', description: 'Enter AMI for ECS.')
         string(name: 'KeyName', defaultValue: 'yasirKP-ohio', description: 'Enter key pair name.')
         string(name: 'ClusterName', defaultValue: 'mycluster', description: 'Enter AMI for ECS.')
-        string(name: 'InstanceType', defaultValue: 't2.small', description: 'Enter type for ECS Instance.')
+        string(name: 'InstanceType', defaultValue: 't2.small', description: 'Enter type for ECS instance.')
         string(name: 'DBfromSSM', defaultValue: 'MYSQL_ROOT_PASSWORD', description: 'DB password value from AWS Systems manager.')
         string(name: 'TargetGroupName', defaultValue: 'mytg', description: 'Enter Target group name.')
         string(name: 'WebECRImage', defaultValue: '020046395185.dkr.ecr.us-east-2.amazonaws.com/newphpimage:latest', description: 'Enter ECR Repo for web app.')
