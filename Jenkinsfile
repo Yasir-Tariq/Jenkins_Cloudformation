@@ -1,8 +1,8 @@
 pipeline {
   agent any
   parameters {
-        string(name: 'ecs', defaultValue: 'ecs-stack', description: 'Enter the stack name for ecs cluster')
-        string(name: 'service', defaultValue: 'service-stack', description: 'Enter the stack name for ecs service')
+        string(name: 'stackecs', defaultValue: 'ecs-stack', description: 'Enter the stack name for ecs cluster')
+        string(name: 'stackservice', defaultValue: 'service-stack', description: 'Enter the stack name for ecs service')
         string(name: 'ecsAMI', defaultValue: 'ami-035ad8e6117e5fde5', description: 'Enter AMI for ECS.')
         string(name: 'KeyName', defaultValue: 'yasirKP-ohio', description: 'Enter key pair name.')
         string(name: 'ClusterName', defaultValue: 'mycluster', description: 'Enter AMI for ECS.')
@@ -19,8 +19,8 @@ pipeline {
             steps {
                 script {
                   withAWS(region:'us-east-2') {
-                          def ecs_stack = cfnUpdate(stack: "${params.ecs}", params:['ecsAMI':"${params.ecsAMI}",'KeyName':"${params.KeyName}",'ClusterName':"${params.ClusterName}",'InstanceType':"${params.InstanceType}"], url:'https://for-nested-stacks.s3.us-east-2.amazonaws.com/ecs.yaml')
-                          def service_stack = cfnUpdate(stack: "${params.service}", params:['DBfromSSM':"${params.DBfromSSM}",'ClusterName':"${params.ClusterName}",'TargetGroupName':"${params.TargetGroupName}",'WebECRImage':"${params.WebECRImage}",'MysqlECRImage':"${params.MysqlECRImage}",'ALBName':"${params.ALBName}",'HealthPath':"${params.HealthPath}"] , url:'https://for-nested-stacks.s3.us-east-2.amazonaws.com/service.yaml')
+                          def ecs_stack = cfnUpdate(stack: "${paramsstackecs}", params:['ecsAMI':"${params.ecsAMI}",'KeyName':"${params.KeyName}",'ClusterName':"${params.ClusterName}",'InstanceType':"${params.InstanceType}"], url:'https://for-nested-stacks.s3.us-east-2.amazonaws.com/ecs.yaml')
+                          def service_stack = cfnUpdate(stack: "${params.stackservice}", params:['DBfromSSM':"${params.DBfromSSM}",'ClusterName':"${params.ClusterName}",'TargetGroupName':"${params.TargetGroupName}",'WebECRImage':"${params.WebECRImage}",'MysqlECRImage':"${params.MysqlECRImage}",'ALBName':"${params.ALBName}",'HealthPath':"${params.HealthPath}"] , url:'https://for-nested-stacks.s3.us-east-2.amazonaws.com/service.yaml')
                         }
                 }
             }
