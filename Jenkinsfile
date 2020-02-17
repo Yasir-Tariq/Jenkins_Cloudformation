@@ -36,7 +36,7 @@ pipeline {
                     // else {    
                         stage ('Modify Stacks') {
                           withAWS(region:'us-east-2') {
-                          def output1 = cfnUpdate(stack: "ecs-stack", paramsFile:'params_ecs.json', file:'ecs.yaml')
+                          def output1 = cfnUpdate(stack: "ecs1-stack", paramsFile:'params_ecs.json', file:'ecs.yaml')
                           def output2 = cfnUpdate(stack: "service-stack", paramsFile:'params_service.json', file:'service.yaml')
 
          
