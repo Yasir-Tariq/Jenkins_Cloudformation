@@ -1,7 +1,7 @@
 pipeline {
   agent any
   parameters {
-        string(name: 'stackecs', defaultValue: 'ecs-stack2', description: 'Enter the stack name for ecs cluster')
+        string(name: 'stackecs', defaultValue: 'ecs-stack22', description: 'Enter the stack name for ecs cluster')
         string(name: 'stackservice', defaultValue: 'service-stack', description: 'Enter the stack name for ecs service')
         string(name: 'ecsAMI', defaultValue: 'ami-035ad8e6117e5fde5', description: 'Enter AMI for ECS.')
         string(name: 'KeyName', defaultValue: 'yasirKP-ohio', description: 'Enter key pair name.')
