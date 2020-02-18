@@ -25,6 +25,15 @@ pipeline {
                 }
             }
         }
+        stage ('git commit') {
+            steps {
+                script {
+                  withAWS(region:'us-east-2') {
+                    sh "echo ${GIT_COMMIT}"
+                        }
+                }
+            }
+        }
     }
 }
 
