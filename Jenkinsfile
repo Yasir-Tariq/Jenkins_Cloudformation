@@ -29,7 +29,6 @@ pipeline {
                   docker.image('tweet').push("${GIT_COMMIT}") //GIT_COMMIT is the environment variable containg the latest commit hash value from git
                 }
               }
-                
                 }
             }
         stage ('CFN') {
