@@ -15,6 +15,18 @@ pipeline {
         string(name: 'HealthPath', defaultValue: '/', description: 'Enter path for health checks.')
            }
      stages {
+        stage ('image build') {
+            steps {
+                docker.build("tweet")
+                }
+            }
+        stage ('image push') {
+            steps {
+                docker.withRegistry("020046395185.dkr.ecr.us-east-2.amazonaws.com/tweet"){
+                  docker.image('tweet').push("${GIT_COMMIT}") //GIT_COMMIT is the environment variable containg the latest commit hash value from git
+                }
+                }
+            }
         stage ('CFN') {
             steps {
                 script {
@@ -25,14 +37,6 @@ pipeline {
                 }
             }
         }
-        stage ('git commit') {
-            steps {
-                script {
-                  withAWS(region:'us-east-2') {
-                    sh "echo ${GIT_COMMIT}"
-                        }
-                }
-            }
         }
     }
 }
