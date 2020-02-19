@@ -10,7 +10,7 @@ pipeline {
         // string(name: 'DBfromSSM', defaultValue: 'MYSQL_ROOT_PASSWORD', description: 'DB password value from AWS Systems manager.')
         string(name: 'TargetGroupName', defaultValue: 'mytg222', description: 'Enter Target group name.')
         string(name: 'WebECRImage', defaultValue: '020046395185.dkr.ecr.us-east-2.amazonaws.com/tweet:latest', description: 'Enter ECR Repo for web app.')
-        // string(name: 'MysqlECRImage', defaultValue: '020046395185.dkr.ecr.us-east-2.amazonaws.com/mysql:5.6', description: 'Enter ECR repo for mysql.')
+        // string(name: 'MysqlECRImage', defaultValue: '020046395185.dkr.ecr.us-east-2.amazonaws.com/mysql:5.6', description: 'Enter ECR repo for mysql.')  
         string(name: 'ALBName', defaultValue: 'myalb222', description: 'Enter name for the Application Load Balancer.')
         string(name: 'HealthPath', defaultValue: '/', description: 'Enter path for health checks.')
            }
